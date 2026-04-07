@@ -4,11 +4,18 @@ import "encoding/xml"
 
 // Config 企业微信应用配置。
 type Config struct {
-	CorpID              string `yaml:"corp_id"`
-	CorpSecret          string `yaml:"corp_secret"`
-	CallbackToken       string `yaml:"callback_token"`
-	CallbackEncodingAES string `yaml:"callback_encoding_aes_key"`
-	AgentID             int    `yaml:"agent_id"`
+	CorpID              string     `yaml:"corp_id"`
+	CorpSecret          string     `yaml:"corp_secret"`
+	CallbackToken       string     `yaml:"callback_token"`
+	CallbackEncodingAES string     `yaml:"callback_encoding_aes_key"`
+	AgentID             int        `yaml:"agent_id"`
+	Sync                SyncConfig `yaml:"sync"`
+}
+
+// SyncConfig 文档同步配置。
+type SyncConfig struct {
+	// WikiID 要同步的知识库 ID，为空则同步所有文档。
+	WikiID string `yaml:"wiki_id"`
 }
 
 // TokenResponse /cgi-bin/gettoken 接口响应。
@@ -45,13 +52,17 @@ type DocListResponse struct {
 	} `json:"data"`
 }
 
-// DocInfo 文档列表中的文档信息。
+// DocInfo 文档信息。
 type DocInfo struct {
 	DocID      string `json:"docid"`
 	DocName    string `json:"doc_name"`
 	DocType    int    `json:"doc_type"`
 	CreateTime int64  `json:"create_time"`
 	ModifyTime int64  `json:"modify_time"`
+	// WikiFileID 知识库内文件标识，格式：<wiki_id>_<file_id>，非知识库文档为空。
+	WikiFileID string `json:"wiki_fileid,omitempty"`
+	// SpaceID 所属空间 ID。
+	SpaceID string `json:"spaceid,omitempty"`
 }
 
 // DocContentResponse /cgi-bin/wedoc/document/get 接口响应。

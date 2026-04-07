@@ -51,7 +51,16 @@ func handleSync(ctx context.Context, docID string) error {
 		return fmt.Errorf("doc sync: 获取文档信息失败: %w", err)
 	}
 
-	// 2. 获取文档内容
+	// 2. 过滤：如果配置了 wiki_id，只同步属于该知识库的文档
+	wikiID := service.WeCom.WikiID()
+	if wikiID != "" {
+		if !strings.HasPrefix(docInfo.WikiFileID, wikiID+"_") {
+			logger.Infof("doc sync: 文档不属于目标知识库, DocID=%s WikiFileID=%s", docID, docInfo.WikiFileID)
+			return nil
+		}
+	}
+
+	// 3. 获取文档内容
 	contentResp, err := service.WeCom.GetDocContent(docID)
 	if err != nil {
 		return fmt.Errorf("doc sync: 获取文档内容失败: %w", err)

@@ -10,9 +10,10 @@ import (
 )
 
 var (
-	DB    *gorm.DB
-	WeCom *wecom.Client
-	Git   *gitops.GitOps
+	DB             *gorm.DB
+	WeCom          *wecom.Client
+	Git            *gitops.GitOps
+	CallbackCrypto *wecom.CallbackCrypto
 )
 
 func Init(cfg *config.Config) (err error) {
@@ -25,6 +26,10 @@ func Init(cfg *config.Config) (err error) {
 		return err
 	}
 	Git, err = gitops.New(cfg.GitOps)
+	if err != nil {
+		return err
+	}
+	CallbackCrypto, err = wecom.NewCallbackCrypto(cfg.WeCom.CallbackToken, cfg.WeCom.CallbackEncodingAES, cfg.WeCom.CorpID)
 	if err != nil {
 		return err
 	}

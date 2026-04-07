@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/demoManito/pulse/internal/app/controller/api/callback"
 	"github.com/demoManito/pulse/internal/app/controller/api/health"
 	"github.com/demoManito/pulse/pkg/handler"
 )
@@ -11,6 +12,7 @@ func Handler() handler.Handler {
 		Name: "api",
 		SubHandlers: []handler.Handler{
 			health.Handler(),
+			callback.Handler(),
 		},
 	}
 }

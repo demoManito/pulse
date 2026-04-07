@@ -34,7 +34,7 @@ func commandMap() map[string]Command {
 }
 
 func main() {
-	cfg, err := config.LoadConfig(*flag.String("config", "./config/config.yaml", "config file"))
+	cfg, err := config.LoadConfig(*flag.String("config", "./config/config.test.yaml", "config file"))
 	if err != nil {
 		logger.Fatalf("Failed to load config: %v", err)
 	}

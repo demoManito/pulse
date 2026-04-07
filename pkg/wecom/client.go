@@ -18,6 +18,7 @@ const baseURL = "https://qyapi.weixin.qq.com"
 type Client struct {
 	corpID     string
 	corpSecret string
+	wikiID     string
 
 	mu          sync.RWMutex
 	accessToken string
@@ -31,8 +32,14 @@ func NewClient(cfg Config) (*Client, error) {
 	return &Client{
 		corpID:     cfg.CorpID,
 		corpSecret: cfg.CorpSecret,
+		wikiID:     cfg.Sync.WikiID,
 		httpClient: &http.Client{Timeout: 10 * time.Second},
 	}, nil
+}
+
+// WikiID 返回配置的知识库 ID。
+func (c *Client) WikiID() string {
+	return c.wikiID
 }
 
 // GetAccessToken 获取有效的 access_token，过期时自动刷新。
