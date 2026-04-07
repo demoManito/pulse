@@ -1,0 +1,34 @@
+http:
+  port: 9784
+  address: "0.0.0.0"
+
+database:
+  host: "127.0.0.1"
+  port: 3306
+  username: "root"
+  password: "123456789"
+  database: "pulse"
+  charset: "utf8mb4"
+  parse_time: true
+  loc: "Local"
+  max_open_conns: 100
+  max_idle_conns: 50
+  conn_max_lifetime: 300
+  conn_max_idle_time: 60
+
+wecom:
+  corp_id: ""
+  corp_secret: ""
+  callback_token: ""
+  callback_encoding_aes_key: ""
+  agent_id: 0
+
+gitops:
+  url: ""
+  local_path: "./data/repo"
+  branch: "main"
+  auth:
+    type: ""       # "ssh" 或 "http"
+    token: ""      # HTTP Token
+    ssh_key: ""    # SSH 私钥路径
+    password: ""   # SSH 私钥密码
