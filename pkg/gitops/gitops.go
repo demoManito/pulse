@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/go-git/go-git/v5"
@@ -26,12 +28,51 @@ func New(cfg Config) (*GitOps, error) {
 		cfg.Branch = "main"
 	}
 
+	// 展开 ~ 为用户主目录
+	cfg.LocalPath = expandHome(cfg.LocalPath)
+
+	// 从 URL 提取仓库名，拼接到 LocalPath 下
+	// 例如 https://git.bilibili.co/tangjingyu/prd.git + ~/DocRepos → ~/DocRepos/prd
+	repoName := repoNameFromURL(cfg.URL)
+	if repoName != "" {
+		cfg.LocalPath = filepath.Join(cfg.LocalPath, repoName)
+	}
+
 	auth, err := newAuth(cfg.Auth)
 	if err != nil {
 		return nil, err
 	}
 
 	return &GitOps{cfg: cfg, auth: auth}, nil
+}
+
+// expandHome 将路径中的 ~ 展开为用户主目录。
+func expandHome(path string) string {
+	if strings.HasPrefix(path, "~/") || path == "~" {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return path
+		}
+		return filepath.Join(home, path[1:])
+	}
+	return path
+}
+
+// repoNameFromURL 从 Git URL 中提取仓库名（去掉 .git 后缀）。
+func repoNameFromURL(url string) string {
+	// 处理末尾斜杠
+	url = strings.TrimRight(url, "/")
+	// 取最后一段
+	parts := strings.Split(url, "/")
+	if len(parts) == 0 {
+		return ""
+	}
+	name := parts[len(parts)-1]
+	// 也处理 ssh 格式 git@host:org/repo.git
+	if idx := strings.LastIndex(name, ":"); idx != -1 {
+		name = name[idx+1:]
+	}
+	return strings.TrimSuffix(name, ".git")
 }
 
 // LocalPath 返回本地仓库路径。

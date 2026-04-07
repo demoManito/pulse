@@ -24,11 +24,11 @@ wecom:
   agent_id: 0
 
 gitops:
-  url: ""
-  local_path: "./data/repo"
+  url: "https://git.bilibili.co/tangjingyu/prd.git"
+  local_path: "~/DocRepos"
   branch: "main"
   auth:
-    type: ""       # "ssh" 或 "http"
-    token: ""      # HTTP Token
-    ssh_key: ""    # SSH 私钥路径
-    password: ""   # SSH 私钥密码
+    type: "http"       # "ssh" 或 "http"
+    token: ""          # HTTP Token（type: "http"）
+    ssh_key: ""        # SSH 私钥路径（type: "ssh"）
+    password: ""       # SSH 私钥密码（type: "ssh"）
